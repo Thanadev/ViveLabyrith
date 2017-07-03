@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour {
 
 	public Camera constructionCamera;
 	public BlockService blockS;
+	public ConstructionGuiController constructionGui;
 
 	private GamePhase phase;
 	private Ray mouseRay;
@@ -46,6 +47,19 @@ public class GameController : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+	public void LaunchGame () {
+		phase = GamePhase.PLAY;
+		CellController[] cells = FindObjectsOfType<CellController> ();
+		constructionGui.HideConstructionElement ();
+
+		foreach (CellController cell in cells) {
+			cell.HidePlaceholder ();
+		}
+
+		FindObjectOfType<PlayerSpawnController> ().SpawnPlayer ();
+		constructionCamera.gameObject.SetActive (false);
 	}
 
 	private void GetSelectedCell () {

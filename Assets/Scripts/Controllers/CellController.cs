@@ -23,4 +23,8 @@ public class CellController : MonoBehaviour {
 			placeholder.SetActive (true);
 		}
 	}
+
+	public void HidePlaceholder () {
+		placeholder.SetActive (false);
+	}
 }

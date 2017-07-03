@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class LabyrinthController : MonoBehaviour {
 
-	public GameObject beacon;
+	public Transform terrain;
+	public Transform beacon;
 	public GameObject cellPrefab;
 	public int cellOffset = 1;
 
@@ -17,15 +18,17 @@ public class LabyrinthController : MonoBehaviour {
 	}
 
 	public void GenerateEmptyCells () {
-		Vector3 cellPos = beacon.transform.position;
+		Vector3 cellPos = beacon.position;
+		GameObject cellCreated = null;
 
 		for (int x = 0; x < xGridSize; x++) {
 			for (int y = 0; y < yGridSize; y++) {
-				Instantiate (cellPrefab, cellPos, cellPrefab.transform.rotation);
+				cellCreated = Instantiate (cellPrefab, cellPos, cellPrefab.transform.rotation) as GameObject;
+				cellCreated.transform.SetParent (terrain);
 				cellPos.x += cellOffset;
 			}
 
-			cellPos.x = beacon.transform.position.x;
+			cellPos.x = beacon.position.x;
 			cellPos.z += cellOffset;
 		}
 	}
