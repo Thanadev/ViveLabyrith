@@ -21,11 +21,29 @@ public class GameController : MonoBehaviour {
 	void Update () {
 		if (phase == GamePhase.CONSTRUCTION) {
 			if (Input.GetMouseButton (0)) {
+				selectedCell = null;
 				GetSelectedCell ();
-				selectedCell.SetBlock (blockS.CurrentBlock);
+
+				if (selectedCell != null) {
+					if (blockS.CanPlaceCurrentBlock ()) {
+						selectedCell.SetBlock (blockS.CurrentBlock);
+
+						if (blockS.CurrentBlock.CompareTag ("PlayerSpawn")) {
+							blockS.SpawnPlaced = true;
+						}
+					}
+				}
 			} else if (Input.GetMouseButton (1)) {
+				selectedCell = null;
 				GetSelectedCell ();
-				selectedCell.EmptyCell ();
+
+				if (selectedCell != null) {
+					selectedCell.EmptyCell ();
+
+					if (blockS.CurrentBlock.CompareTag ("PlayerSpawn")) {
+						blockS.SpawnPlaced = false;
+					}
+				}
 			}
 		}
 	}

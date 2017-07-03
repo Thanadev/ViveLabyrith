@@ -15,19 +15,13 @@ public class LabyrinthController : MonoBehaviour {
 	void Start () {
 		GenerateEmptyCells ();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
 	public void GenerateEmptyCells () {
 		Vector3 cellPos = beacon.transform.position;
-		GameObject tmpCell = null;
 
 		for (int x = 0; x < xGridSize; x++) {
 			for (int y = 0; y < yGridSize; y++) {
-				tmpCell = Instantiate (cellPrefab, cellPos, cellPrefab.transform.rotation) as GameObject;
+				Instantiate (cellPrefab, cellPos, cellPrefab.transform.rotation);
 				cellPos.x += cellOffset;
 			}
 
