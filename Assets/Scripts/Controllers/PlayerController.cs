@@ -14,7 +14,13 @@ public class PlayerController : MonoBehaviour {
 	
 	void Update () {
 		Vector3 nextVelocity = new Vector3 (Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-		
+		nextVelocity = transform.TransformDirection (nextVelocity);
 		rb.velocity = nextVelocity;
+
+		Vector3 nextEuler = transform.rotation.eulerAngles;
+		nextEuler.y += Input.GetAxisRaw ("Mouse X");
+		nextEuler.x += Input.GetAxisRaw ("Mouse Y") * -1;
+
+		transform.rotation = Quaternion.Euler (nextEuler);
 	}
 }
