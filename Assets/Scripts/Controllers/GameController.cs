@@ -6,6 +6,7 @@ public class GameController : MonoBehaviour {
 
 	public Camera constructionCamera;
 	public BlockService blockS;
+	public ConstructionGuiController constructionGui;
 
 	private GamePhase phase;
 	private Ray mouseRay;
@@ -19,20 +20,13 @@ public class GameController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        // Mouse controls
 		if (phase == GamePhase.CONSTRUCTION) {
 			if (Input.GetMouseButton (0)) {
 				selectedCell = null;
 				GetSelectedCell ();
 
-				if (selectedCell != null) {
-					if (blockS.CanPlaceCurrentBlock ()) {
-						selectedCell.SetBlock (blockS.CurrentBlock);
-
-						if (blockS.CurrentBlock.CompareTag ("PlayerSpawn")) {
-							blockS.SpawnPlaced = true;
-						}
-					}
-				}
+                DoPlaceAction(selectedCell);
 			} else if (Input.GetMouseButton (1)) {
 				selectedCell = null;
 				GetSelectedCell ();
@@ -46,6 +40,42 @@ public class GameController : MonoBehaviour {
 				}
 			}
 		}
+	}
+
+    public void DoPlaceAction (CellController cell)
+    {
+        selectedCell = cell;
+
+        if (selectedCell != null)
+        {
+            if (blockS.CanPlaceCurrentBlock())
+            {
+                selectedCell.SetBlock(blockS.CurrentBlock);
+
+                if (blockS.CurrentBlock.CompareTag("PlayerSpawn"))
+                {
+                    blockS.SpawnPlaced = true;
+                }
+            }
+        }
+    }
+
+	public void LaunchGame () {
+		phase = GamePhase.PLAY;
+		CellController[] cells = FindObjectsOfType<CellController> ();
+		constructionGui.HideConstructionElement ();
+
+		foreach (CellController cell in cells) {
+			cell.HidePlaceholder ();
+		}
+
+		DisappearOnLaunchController[] toDisappear = FindObjectsOfType<DisappearOnLaunchController> ();
+		foreach (DisappearOnLaunchController dis in toDisappear) {
+			dis.Disappear ();
+		}
+
+		FindObjectOfType<PlayerSpawnController> ().SpawnPlayer ();
+		constructionCamera.gameObject.SetActive (false);
 	}
 
 	private void GetSelectedCell () {

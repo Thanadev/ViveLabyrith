@@ -5,18 +5,11 @@ using UnityEngine.UI;
 
 public class ConstructionGuiController : MonoBehaviour {
 
-	public BlockService blockS;
+	public GameObject[] guiToHide;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
-	public void BlockButtonClickedHandler (int index) {
+	public void HideConstructionElement () {
+		foreach (GameObject element in guiToHide) {
+			element.SetActive (false);
+		}
 	}
 }
