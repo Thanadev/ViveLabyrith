@@ -58,6 +58,11 @@ public class GameController : MonoBehaviour {
 			cell.HidePlaceholder ();
 		}
 
+		DisappearOnLaunchController[] toDisappear = FindObjectsOfType<DisappearOnLaunchController> ();
+		foreach (DisappearOnLaunchController dis in toDisappear) {
+			dis.Disappear ();
+		}
+
 		FindObjectOfType<PlayerSpawnController> ().SpawnPlayer ();
 		constructionCamera.gameObject.SetActive (false);
 	}
