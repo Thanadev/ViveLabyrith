@@ -12,34 +12,32 @@ public class VRController : MonoBehaviour {
     void Start () {
         controller = GetComponent<SteamVR_TrackedController>();
         gameC = FindObjectOfType<GameController>();
-        //controller.TriggerClicked += TriggerPressedHandler;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		if (controller.triggerPressed)
-        {
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
+        if (controller.triggerPressed) {
+            if (gameC.Phase == GameController.GamePhase.CONSTRUCTION)
             {
-                // Check hit object (ui or cell)
-                VRButtonInteractionController buttonController = hit.collider.GetComponent<VRButtonInteractionController>();
-
-                if (buttonController != null)
-                {
-                    buttonController.TriggeredHandler();
-                }
-                else
-                {
+                if (Physics.Raycast(transform.position, transform.forward, out hit)) {
+                    // Check hit object (ui or cell)
+                    VRButtonInteractionController buttonController = hit.collider.GetComponent<VRButtonInteractionController>();
                     CellController cell = hit.collider.GetComponent<CellController>();
+                    VRPlayButtonController playButtonController = hit.collider.GetComponent<VRPlayButtonController>();
 
-                    if (cell != null)
+                    if (buttonController != null)
                     {
-                        gameC.DoPlaceAction(cell);
+                        buttonController.TriggeredHandler();
+                    } else if (cell != null)  {
+                        gameC.DoTriggerAction(cell);
+                    } else if (playButtonController != null) {
+                        playButtonController.TriggeredHandler();
                     }
                 }
+            } else {
+                gameC.DoTriggerAction(transform.forward);
             }
-        } else if (controller.padPressed)
-        {
+        } else if (controller.padPressed && gameC.Phase == GameController.GamePhase.CONSTRUCTION) {
             RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward);
 
             foreach (RaycastHit hitInfo in hits)
@@ -52,5 +50,5 @@ public class VRController : MonoBehaviour {
                 }
             }
         }
-	}
+    }
 }

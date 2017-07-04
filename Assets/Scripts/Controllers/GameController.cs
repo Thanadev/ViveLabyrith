@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
+    public GameObject constructionCameraContainer;
 	public Camera constructionCamera;
 	public BlockService blockS;
 	public ConstructionGuiController constructionGui;
@@ -12,6 +13,7 @@ public class GameController : MonoBehaviour {
 	private Ray mouseRay;
 	private RaycastHit cellHit;
 	private CellController selectedCell;
+    private PlayerController playerController;
 
 	// Use this for initialization
 	void Awake () {
@@ -26,7 +28,7 @@ public class GameController : MonoBehaviour {
 				selectedCell = null;
 				GetSelectedCell ();
 
-                DoPlaceAction(selectedCell);
+                DoTriggerAction(selectedCell);
 			} else if (Input.GetMouseButton (1)) {
 				selectedCell = null;
 				GetSelectedCell ();
@@ -42,28 +44,39 @@ public class GameController : MonoBehaviour {
 		}
 	}
 
-    public void DoPlaceAction (CellController cell)
+    public void DoTriggerAction (CellController cell)
     {
-        selectedCell = cell;
-
-        if (selectedCell != null)
+        if (phase == GamePhase.CONSTRUCTION)
         {
-            if (blockS.CanPlaceCurrentBlock())
-            {
-                selectedCell.SetBlock(blockS.CurrentBlock);
+            selectedCell = cell;
 
-                if (blockS.CurrentBlock.CompareTag("PlayerSpawn"))
+            if (selectedCell != null)
+            {
+                if (blockS.CanPlaceCurrentBlock())
                 {
-                    blockS.SpawnPlaced = true;
+                    selectedCell.SetBlock(blockS.CurrentBlock);
+
+                    if (blockS.CurrentBlock.CompareTag("PlayerSpawn"))
+                    {
+                        blockS.SpawnPlaced = true;
+                    }
                 }
             }
         }
     }
 
-	public void LaunchGame () {
-		phase = GamePhase.PLAY;
+    public void DoTriggerAction(Vector3 direction)
+    {
+        if (phase == GamePhase.PLAY)
+        {
+            playerController.TriggeredMoveHandler(direction);
+        }
+    }
+
+    public void LaunchGame () {
 		CellController[] cells = FindObjectsOfType<CellController> ();
 		constructionGui.HideConstructionElement ();
+        constructionCameraContainer.SetActive(false);
 
 		foreach (CellController cell in cells) {
 			cell.HidePlaceholder ();
@@ -74,9 +87,10 @@ public class GameController : MonoBehaviour {
 			dis.Disappear ();
 		}
 
-		FindObjectOfType<PlayerSpawnController> ().SpawnPlayer ();
+		playerController = FindObjectOfType<PlayerSpawnController> ().SpawnPlayer ();
 		constructionCamera.gameObject.SetActive (false);
-	}
+        phase = GamePhase.PLAY;
+    }
 
 	private void GetSelectedCell () {
 		mouseRay = constructionCamera.ScreenPointToRay (Input.mousePosition);
@@ -85,6 +99,14 @@ public class GameController : MonoBehaviour {
 			selectedCell = cellHit.collider.GetComponent<CellController> ();
 		}
 	}
+
+    public GamePhase Phase
+    {
+        get
+        {
+            return phase;
+        }
+    }
 
 	public enum GamePhase {
 		CONSTRUCTION, 

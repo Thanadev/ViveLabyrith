@@ -6,7 +6,10 @@ public class PlayerSpawnController : MonoBehaviour {
 
 	public GameObject playerPrefab;
 
-	public void SpawnPlayer () {
-		Instantiate (playerPrefab, new Vector3 (transform.position.x, playerPrefab.transform.position.y, transform.position.z), playerPrefab.transform.rotation);
-	}
+	public PlayerController SpawnPlayer () {
+        GameObject player;
+		player = Instantiate (playerPrefab, new Vector3 (transform.position.x, playerPrefab.transform.position.y, transform.position.z), playerPrefab.transform.rotation) as GameObject;
+
+        return player.GetComponent<PlayerController>();
+    }
 }
