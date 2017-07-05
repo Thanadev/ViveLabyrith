@@ -35,7 +35,22 @@ public class VRController : MonoBehaviour {
                     }
                 }
             } else {
-                gameC.DoTriggerAction(transform.forward);
+                RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward);
+                bool buttonClicked = false;
+
+                foreach (RaycastHit hit in hits)
+                {
+                    VRBackToMenuButton backButton = hit.collider.GetComponent<VRBackToMenuButton>();
+
+                    if (backButton != null)
+                    {
+                        backButton.TriggerPressedHandler();
+                    }
+                }
+
+                if (!buttonClicked) { 
+                    gameC.DoTriggerAction(transform.forward);
+                }
             }
         } else if (controller.padPressed && gameC.Phase == GameController.GamePhase.CONSTRUCTION) {
             RaycastHit[] hits = Physics.RaycastAll(transform.position, transform.forward);

@@ -10,6 +10,11 @@ public class CellController : MonoBehaviour {
 
 	public void SetBlock (GameObject prefab) {
 		if (currentBlock != null) {
+            if (currentBlock.GetComponent<PlayerSpawnController>() != null)
+            {
+                FindObjectOfType<BlockService>().SpawnPlaced = false;
+            }
+
 			Destroy (currentBlock);
 		}
 
@@ -19,7 +24,12 @@ public class CellController : MonoBehaviour {
 
 	public void EmptyCell () {
 		if (currentBlock != null) {
-			Destroy (currentBlock);
+            if (currentBlock.GetComponent<PlayerSpawnController>() != null)
+            {
+                FindObjectOfType<BlockService>().SpawnPlaced = false;
+            }
+
+            Destroy (currentBlock);
 			placeholder.SetActive (true);
 		}
 	}

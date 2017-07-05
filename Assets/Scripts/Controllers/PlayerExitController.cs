@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerExitController : MonoBehaviour {
 
 	void OnTriggerEnter (Collider other) {
 		if (other.CompareTag ("Player")) {
-			Debug.Log ("Exited");
+            SceneManager.LoadScene("menu");
 		}
 	}
 }

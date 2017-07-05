@@ -1,18 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlockService : MonoBehaviour {
 
 	public DialogBoxController dialogBox;
 	public GameObject[] blocks;
+    public GameObject launchGameButton;
 
 	private GameObject currentBlock;
 	private bool spawnPlaced = false;
 
 	void Awake () {
 		currentBlock = blocks [0];
-	}
+        launchGameButton.GetComponent<Button>().interactable = false;
+        launchGameButton.GetComponent<BoxCollider>().enabled = false;
+    }
 
 	public void SelectBlock (int index) {
 		if (index >= 0 && index < blocks.Length) {
@@ -47,6 +51,16 @@ public class BlockService : MonoBehaviour {
 		}
 		set {
 			spawnPlaced = value;
+
+            if (spawnPlaced == true)
+            {
+                launchGameButton.GetComponent<Button>().interactable = true;
+                launchGameButton.GetComponent<BoxCollider>().enabled = true;
+            } else
+            {
+                launchGameButton.GetComponent<Button>().interactable = false;
+                launchGameButton.GetComponent<BoxCollider>().enabled = false;
+            }
 		}
 	}
 }

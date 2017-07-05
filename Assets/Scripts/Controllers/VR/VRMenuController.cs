@@ -8,6 +8,7 @@ public class VRMenuController : MonoBehaviour {
 
 	// Use this for initialization
 	void Awake () {
+        controller = GetComponent<SteamVR_TrackedController>();
 		controller.TriggerClicked += TriggerPressedHandler;
 	}
 	
