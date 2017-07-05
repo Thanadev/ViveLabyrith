@@ -9,6 +9,7 @@ public class PlayerSpawnController : MonoBehaviour {
 	public PlayerController SpawnPlayer () {
         GameObject player;
 		player = Instantiate (playerPrefab, new Vector3 (transform.position.x, playerPrefab.transform.position.y, transform.position.z), playerPrefab.transform.rotation) as GameObject;
+        GetComponent<CapsuleCollider>().enabled = false;
 
         return player.GetComponent<PlayerController>();
     }

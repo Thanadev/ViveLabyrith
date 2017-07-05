@@ -36,5 +36,6 @@ public class CellController : MonoBehaviour {
 
 	public void HidePlaceholder () {
 		placeholder.SetActive (false);
+        GetComponent<BoxCollider>().enabled = false;
 	}
 }

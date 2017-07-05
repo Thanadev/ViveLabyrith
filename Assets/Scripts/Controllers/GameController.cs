@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class GameController : MonoBehaviour {
 
@@ -8,8 +9,9 @@ public class GameController : MonoBehaviour {
 	public Camera constructionCamera;
 	public BlockService blockS;
 	public ConstructionGuiController constructionGui;
+    public NavMeshSurface terrain;
 
-	private GamePhase phase;
+    private GamePhase phase;
 	private Ray mouseRay;
 	private RaycastHit cellHit;
 	private CellController selectedCell;
@@ -74,21 +76,34 @@ public class GameController : MonoBehaviour {
     }
 
     public void LaunchGame () {
-		CellController[] cells = FindObjectsOfType<CellController> ();
-		constructionGui.HideConstructionElement ();
-        constructionCameraContainer.SetActive(false);
+        // Cells
+        CellController[] cells = FindObjectsOfType<CellController>();
+        terrain.BuildNavMesh();
 
-		foreach (CellController cell in cells) {
+        foreach (CellController cell in cells) {
 			cell.HidePlaceholder ();
 		}
 
+        // Disappearing objects
 		DisappearOnLaunchController[] toDisappear = FindObjectsOfType<DisappearOnLaunchController> ();
 		foreach (DisappearOnLaunchController dis in toDisappear) {
 			dis.Disappear ();
 		}
 
+        // Spawn Player
 		playerController = FindObjectOfType<PlayerSpawnController> ().SpawnPlayer ();
-		constructionCamera.gameObject.SetActive (false);
+
+        // Sentinels
+        SentinelController[] sentinels = FindObjectsOfType<SentinelController>();
+        foreach (SentinelController sentinel in sentinels)
+        {
+            sentinel.GameLaunchHandler();
+        }
+
+        // End the construction phase
+        constructionGui.HideConstructionElement();
+        constructionCameraContainer.SetActive(false);
+        constructionCamera.gameObject.SetActive (false);
         phase = GamePhase.PLAY;
     }
 
