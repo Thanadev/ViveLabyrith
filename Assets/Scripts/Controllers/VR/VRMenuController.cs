@@ -3,21 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class VRMenuController : MonoBehaviour {
-
-	private SteamVR_TrackedController controller;
-
-	// Use this for initialization
-	void Awake () {
-        controller = GetComponent<SteamVR_TrackedController>();
-		controller.TriggerClicked += TriggerPressedHandler;
-	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (Input.GetMouseButtonUp(0)) {
+			TriggerPressedHandler ();
+		}
 	}
 
-	private void TriggerPressedHandler (object sender, ClickedEventArgs args) {
+	private void TriggerPressedHandler () {
 		RaycastHit hit;
 
 		if (Physics.Raycast (transform.position, transform.forward, out hit)) {

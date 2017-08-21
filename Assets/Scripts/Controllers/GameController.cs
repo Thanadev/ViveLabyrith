@@ -21,30 +21,6 @@ public class GameController : MonoBehaviour {
 	void Awake () {
 		phase = GamePhase.CONSTRUCTION;
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        // Mouse controls
-		if (phase == GamePhase.CONSTRUCTION) {
-			if (Input.GetMouseButton (0)) {
-				selectedCell = null;
-				GetSelectedCell ();
-
-                DoTriggerAction(selectedCell);
-			} else if (Input.GetMouseButton (1)) {
-				selectedCell = null;
-				GetSelectedCell ();
-
-				if (selectedCell != null) {
-					selectedCell.EmptyCell ();
-
-					if (blockS.CurrentBlock.CompareTag ("PlayerSpawn")) {
-						blockS.SpawnPlaced = false;
-					}
-				}
-			}
-		}
-	}
 
     public void DoTriggerAction (CellController cell)
     {
