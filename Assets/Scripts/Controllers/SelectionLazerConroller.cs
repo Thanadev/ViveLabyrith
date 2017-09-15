@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class SelectionLazerConroller : MonoBehaviour {
 
+	private ConstructionGuiController constructionGui;
 	private GameController gameC;
 	private RaycastHit hit; 
 	private LineRenderer line;
 
-	// Use this for initialization
 	void Start () {
 		gameC = FindObjectOfType<GameController>();
+		constructionGui = FindObjectOfType<ConstructionGuiController> ();
 		line = GetComponent<LineRenderer> ();
 	}
 	
-	// Update is called once per frame
+	// TODO clean code
 	void Update () {
 		Physics.Raycast (transform.position, transform.forward, out hit);
 		Vector3[] positions = { transform.position, hit.point };
@@ -29,7 +30,8 @@ public class SelectionLazerConroller : MonoBehaviour {
 					VRPlayButtonController playButtonController = hit.collider.GetComponent<VRPlayButtonController>();
 
 					if (buttonController != null) {
-						buttonController.TriggeredHandler();
+						Color buttonColor = buttonController.TriggeredHandler();
+						constructionGui.ActualizeSelectedBlock (buttonColor);
 					} else if (cell != null)  {
 						gameC.DoTriggerAction(cell);
 					} else if (playButtonController != null) {
